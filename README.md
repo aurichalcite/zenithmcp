@@ -1,1 +1,93 @@
-# zenithmcp
+Of course. Here is the `README.md` file for the ZenithMCP project, created based on the provided sources.
+
+***
+
+# ZenithMCP
+
+[![CI](https://github.com/zenithmcp/zenithmcp/actions/workflows/ci.yml/badge.svg)](https://github.com/zenithmcp/zenithmcp/actions/workflows/ci.yml)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Python Versions](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue)](https://www.python.org/downloads/)
+
+**An open-source, high-performance server for the Model Context Protocol (MCP) that provides real-time, relevant context from private codebases to LLM-powered coding agents.**
+
+## Overview
+
+Large Language Models (LLMs) are transforming software development, but their effectiveness is limited by a critical **"context gap"**: they lack knowledge of private, proprietary, or recently developed codebases. ZenithMCP is designed to solve this problem by serving as a highly optimized context provider for any MCP-compatible AI agent.
+
+By indexing your private repositories, ZenithMCP empowers LLMs to reason about, understand, and generate code for projects not included in their training data. This significantly reduces hallucinations and enhances their utility in real-world development workflows.
+
+At its core, ZenithMCP uses a specialized, **two-stage Retrieval-Augmented Generation (RAG) pipeline**, meticulously designed for the semantic and structural complexities of source code.
+
+## Key Features
+
+*   **Model Context Protocol (MCP) Standard**: Built as a server implementation of the open MCP standard, ensuring broad interoperability with AI agents from providers like Anthropic, OpenAI, and Google DeepMind.
+*   **Two-Stage RAG for High Precision**: A sophisticated retrieval architecture that first uses an efficient vector search for high recall, then a powerful cross-encoder model for high-precision re-ranking. This delivers context that is both accurate and low-latency.
+*   **Structure-Aware Code Parsing**: Leverages `tree-sitter` to parse code into Abstract Syntax Trees (ASTs), creating semantically coherent chunks based on functions and classes instead of naive text splitting.
+*   **Structurally-Aware Embeddings**: Uses the **GraphCodeBERT** model, which understands not just text but also code structure like data flow, creating a powerful synergy with the AST-based chunks for superior retrieval accuracy.
+*   **High-Performance and Scalable**: Built on a modern, asynchronous Python stack including FastAPI and Qdrant, and architected as four distinct services (Interface, RAG Core, Caching, Ingestion) for modularity and scalability.
+*   **A Modern, Contributor-Friendly Foundation**: The project is built with a state-of-the-art toolchain using `uv` for package management and `Ruff` for all linting and formatting, providing a fast, low-friction experience for contributors.
+
+## Quick Start
+
+Get ZenithMCP up and running in a few simple steps. This guide assumes you have Python 3.10+ and `pip` installed.
+
+### 1. Installation
+
+The project uses `uv` for fast and reliable dependency management. First, install `uv`:
+
+```bash
+# Install uv using pip
+pip install uv
+```
+
+Next, clone the repository and install the required dependencies using `uv sync`.
+
+```bash
+# Clone the repository
+git clone https://github.com/zenithmcp/zenithmcp.git
+cd zenithmcp
+
+# Install dependencies into a new virtual environment
+uv sync
+```
+
+### 2. Basic Usage
+
+*(Information from outside the provided sources: The following is a conceptual example of how the server might be run, as the sources do not specify the exact command.)*
+
+Once installed, you can start the ZenithMCP server. You will first need to configure it to point to the code repositories you want to index.
+
+```bash
+# Example: Point the server to a local directory to index
+export ZMCP_INDEX_PATH=/path/to/your/projects
+
+# Run the data ingestion pipeline
+zenithmcp ingest
+
+# Start the MCP server
+zenithmcp serve
+```
+
+The server is now running and can be discovered by any MCP-compatible client, such as an AI-powered IDE.
+
+## Contributing
+
+We welcome contributions of all kinds! ZenithMCP is an open-source project dedicated to building a high-quality, community-driven tool for the future of AI-assisted development.
+
+If you're interested in contributing, please start by reading our **[CONTRIBUTING.md](CONTRIBUTING.md)** guide. It provides a detailed walkthrough of our development process, how to set up your development environment, and our code of conduct.
+
+Setting up a development environment is fast and simple:
+```bash
+# Install all project and development dependencies
+uv sync --dev
+```
+
+## Documentation
+
+For a complete guide to the system's architecture, API reference, and advanced configuration, please see our full documentation.
+
+**(Link to Documentation Site)** *(Information from outside the provided sources: A placeholder for the documentation link, which would be generated by Sphinx.)*
+
+## License
+
+This project is licensed under the **Apache 2.0 License**. See the **[LICENSE](LICENSE)** file for details. This permissive license was chosen to encourage widespread adoption and integration.
