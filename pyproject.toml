@@ -8,9 +8,9 @@ version = "0.1.0"
 description = "High-performance MCP server for code context retrieval"
 readme = "README.md"
 requires-python = ">=3.10"
-license = {text = "Apache-2.0"}
+license = {text = "Business Source License (BSL) 1.1"}
 authors = [
-    {name = "ZenithMCP Contributors", email = "contact@zenithmcp.org"},
+    {name = "FoveaWeb LLC", email = "86407432+aurichalcite@users.noreply.github.com"},
 ]
 keywords = [
     "mcp",
@@ -25,7 +25,7 @@ keywords = [
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: Apache Software License",
+    "License :: Other/Proprietary License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",

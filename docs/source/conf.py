@@ -8,8 +8,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
 # Project information
 project = "ZenithMCP"
-copyright = "2025, ZenithMCP Contributors"
-author = "ZenithMCP Contributors"
+copyright = "2025, FoveaWeb LLC"
+author = "Andrej Masiar"
 release = "0.1.0"
 version = "0.1.0"
 
