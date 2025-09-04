@@ -10,7 +10,7 @@ ZenithMCP is an open-source, high-performance server implementation of the Model
 - Build a robust MCP server that provides real-time code context to AI agents
 - Implement a two-stage RAG pipeline optimized for source code retrieval
 - Create a modular, scalable architecture suitable for enterprise deployment
-- Establish best practices for open-source development and community engagement
+- Establish best practices for development
 - Demonstrate advanced software engineering skills through clean, maintainable code
 
 ### Success Metrics
@@ -34,7 +34,7 @@ ZenithMCP is an open-source, high-performance server implementation of the Model
 - [x] Create GitHub Actions CI/CD pipeline
 - [x] Initialize Sphinx documentation system
 - [x] Write comprehensive README.md
-- [x] Add LICENSE (BUSL) and CONTRIBUTING.md
+- [x] Add LICENSE (BUSL)
 - [ ] Set up pre-commit hooks for code quality
 
 #### Deliverables
