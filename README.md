@@ -1,7 +1,3 @@
-Of course. Here is the `README.md` file for the ZenithMCP project, created based on the provided sources.
-
-***
-
 # ZenithMCP
 
 [![CI](https://github.com/aurichalcite/zenithmcp/actions/workflows/ci.yml/badge.svg)](https://github.com/aurichalcite/zenithmcp/actions/workflows/ci.yml)
