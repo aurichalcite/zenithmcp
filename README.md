@@ -4,11 +4,10 @@ Of course. Here is the `README.md` file for the ZenithMCP project, created based
 
 # ZenithMCP
 
-[![CI](https://github.com/zenithmcp/zenithmcp/actions/workflows/ci.yml/badge.svg)](https://github.com/zenithmcp/zenithmcp/actions/workflows/ci.yml)
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![CI](https://github.com/aurichalcite/zenithmcp/actions/workflows/ci.yml/badge.svg)](https://github.com/aurichalcite/zenithmcp/actions/workflows/ci.yml)
 [![Python Versions](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue)](https://www.python.org/downloads/)
 
-**An open-source, high-performance server for the Model Context Protocol (MCP) that provides real-time, relevant context from private codebases to LLM-powered coding agents.**
+**High-performance server for the Model Context Protocol (MCP) that provides real-time, relevant context from private codebases to LLM-powered coding agents.**
 
 ## Overview
 
@@ -90,4 +89,4 @@ For a complete guide to the system's architecture, API reference, and advanced c
 
 ## License
 
-This project is licensed under the **Apache 2.0 License**. See the **[LICENSE](LICENSE)** file for details. This permissive license was chosen to encourage widespread adoption and integration.
+This project is licensed under the **BUSINESS SOURCE LICENSE (BSL) 1.1**. See the **[LICENSE](LICENSE)** file for details. This permissive license was chosen to encourage widespread adoption and integration.
