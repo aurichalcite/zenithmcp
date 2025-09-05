@@ -379,7 +379,7 @@ Active contributors may be invited to become maintainers. We look for:
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under the Apache 2.0 License.
+By contributing, you agree that your contributions will be licensed under the Business Source License 1.1 (BSL 1.1), in accordance with the project's primary license.
 
 ## Questions?
 
