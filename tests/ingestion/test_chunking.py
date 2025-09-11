@@ -43,9 +43,8 @@ class TestCodeChunker:
         chunker = CodeChunker(sample_config)
 
         # Valid content
-        assert chunker._validate_file_content(
-            "def hello():\n    print('hello')", "test.py"
-        )
+        valid_content = "\n".join(["line"] * 10)
+        assert chunker._validate_file_content(valid_content, "test.py")
 
         # Empty content
         assert not chunker._validate_file_content("", "test.py")
@@ -58,7 +57,10 @@ class TestCodeChunker:
         small_content = "\n".join(["line"] * 3)  # 3 lines, min is 5
         assert not chunker._validate_file_content(small_content, "test.py")
 
-    def test_chunk_file_success(self, sample_config, sample_python_code, fs):
+    @patch("zenithmcp.ingestion.chunking.astchunk.ASTChunkBuilder")
+    def test_chunk_file_success(
+        self, mock_builder_class, sample_config, sample_python_code, fs
+    ):
         """Test successful file chunking."""
         repo_path = Path("/test/repo")
         fs.create_dir(repo_path)
@@ -66,34 +68,36 @@ class TestCodeChunker:
 
         chunker = CodeChunker(sample_config)
 
-        with patch("astchunk.chunk") as mock_astchunk:
-            # Mock astchunk to return some chunks
-            mock_astchunk.return_value = [
-                {
-                    "content": (
-                        "class Calculator:\n    def __init__(self):\n        "
-                        "self.history = []"
-                    ),
+        # Mock the builder and its chunkify method
+        mock_builder_instance = mock_builder_class.return_value
+        mock_builder_instance.chunkify.return_value = [
+            {
+                "content": (
+                    "class Calculator:\n    def __init__(self):\n        "
+                    "self.history = []"
+                ),
+                "metadata": {
                     "start_line": 8,
                     "end_line": 10,
                     "symbol_name": "Calculator",
                     "symbol_type": "class",
                 },
-                {
-                    "content": (
-                        "def add(self, a: float, b: float) -> float:\n        "
-                        "result = a + b\n        return result"
-                    ),
+            },
+            {
+                "content": (
+                    "def add(self, a: float, b: float) -> float:\n        "
+                    "result = a + b\n        return result"
+                ),
+                "metadata": {
                     "start_line": 12,
                     "end_line": 15,
                     "symbol_name": "add",
                     "symbol_type": "method",
                 },
-            ]
+            },
+        ]
 
-            result = chunker.chunk_file(
-                "calculator.py", repo_path, "test_repo", "abc123"
-            )
+        result = chunker.chunk_file("calculator.py", repo_path, "test_repo", "abc123")
 
         assert result.success is True
         assert result.file_path == "calculator.py"
@@ -165,22 +169,6 @@ class TestCodeChunker:
         assert result.success is False
         assert "File content validation failed" in result.error_message
 
-    def test_fallback_line_chunking(self, sample_config):
-        """Test fallback line-based chunking."""
-        chunker = CodeChunker(sample_config)
-
-        content = "\n".join([f"line {i}" for i in range(1, 21)])  # 20 lines
-
-        chunks = chunker._fallback_line_chunking(content)
-
-        assert len(chunks) > 0
-
-        # Check first chunk
-        first_chunk = chunks[0]
-        assert first_chunk["start_line"] == 1
-        assert first_chunk["symbol_type"] == "chunk"
-        assert "content" in first_chunk
-
     def test_create_fallback_chunks_small_file(self, sample_config):
         """Test creating fallback chunks for small file."""
         chunker = CodeChunker(sample_config)
@@ -228,10 +216,11 @@ class TestCodeChunker:
         assert second_chunk.start_line == 99  # 100 - overlap_lines (2) + 1
         assert second_chunk.symbol_name == "chunk_2"
 
-    @patch("astchunk.chunk")
-    def test_chunk_content_astchunk_failure(self, mock_astchunk, sample_config):
+    @patch("zenithmcp.ingestion.chunking.astchunk.ASTChunkBuilder")
+    def test_chunk_content_astchunk_failure(self, mock_builder_class, sample_config):
         """Test chunking when astchunk fails."""
-        mock_astchunk.side_effect = Exception("AST parsing failed")
+        mock_builder_instance = mock_builder_class.return_value
+        mock_builder_instance.chunkify.side_effect = Exception("AST parsing failed")
 
         chunker = CodeChunker(sample_config)
 
@@ -247,8 +236,14 @@ class TestCodeChunker:
         assert chunk.content == content
         assert chunk.symbol_type == "file"
 
+    @patch("zenithmcp.ingestion.chunking.astchunk.ASTChunkBuilder")
     def test_run_multiple_files(
-        self, sample_config, sample_python_code, sample_javascript_code, fs
+        self,
+        mock_builder_class,
+        sample_config,
+        sample_python_code,
+        sample_javascript_code,
+        fs,
     ):
         """Test chunking multiple files."""
         repo_path = Path("/test/repo")
@@ -258,33 +253,37 @@ class TestCodeChunker:
 
         chunker = CodeChunker(sample_config)
 
-        with patch("astchunk.chunk") as mock_astchunk:
-            # Mock astchunk to return chunks for each file
-            mock_astchunk.side_effect = [
-                # Python file chunks
-                [
-                    {
-                        "content": "class Calculator:",
+        # Mock the builder and its chunkify method
+        mock_builder_instance = mock_builder_class.return_value
+        mock_builder_instance.chunkify.side_effect = [
+            # Python file chunks
+            [
+                {
+                    "content": "class Calculator:",
+                    "metadata": {
                         "start_line": 1,
-                        "end_line": 1,
+                        "end_line": 3,
                         "symbol_name": "Calculator",
                         "symbol_type": "class",
-                    }
-                ],
-                # JavaScript file chunks
-                [
-                    {
-                        "content": "class Calculator {",
+                    },
+                }
+            ],
+            # JavaScript file chunks
+            [
+                {
+                    "content": "class Calculator {",
+                    "metadata": {
                         "start_line": 1,
-                        "end_line": 1,
+                        "end_line": 3,
                         "symbol_name": "Calculator",
                         "symbol_type": "class",
-                    }
-                ],
-            ]
+                    },
+                }
+            ],
+        ]
 
-            files = ["calculator.py", "utils.js"]
-            chunks = chunker.run(files, str(repo_path), "test_repo", "abc123")
+        files = ["calculator.py", "utils.js"]
+        chunks = chunker.run(files, str(repo_path), "test_repo", "abc123")
 
         assert len(chunks) == 2
 

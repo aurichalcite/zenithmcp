@@ -1,5 +1,6 @@
 """Tests for pipeline orchestration."""
 
+from pathlib import Path
 from unittest.mock import Mock, patch
 
 from typer.testing import CliRunner
@@ -33,7 +34,7 @@ class TestPipelineOrchestration:
     ):
         """Test successful pipeline run."""
         # Setup fake filesystem
-        repo_path = "/test/repo"
+        repo_path = Path("/test/repo")
         fs.create_dir(repo_path)
         fs.create_file(repo_path / "main.py", contents="print('hello')")
 
@@ -72,12 +73,12 @@ class TestPipelineOrchestration:
         mock_indexer_class.return_value = mock_indexer
 
         # Run command
-        result = self.runner.invoke(app, ["run", repo_path])
+        result = self.runner.invoke(app, ["run", str(repo_path)])
 
         assert result.exit_code == 0
 
         # Verify all components were called
-        mock_discoverer.run.assert_called_once_with(repo_path)
+        mock_discoverer.run.assert_called_once_with(str(repo_path))
         mock_chunker.run.assert_called_once()
         mock_embedder.run.assert_called_once()
         mock_indexer.run.assert_called_once()
@@ -106,18 +107,24 @@ class TestPipelineOrchestration:
         assert result.exit_code == 1
         assert "Failed to load configuration" in result.output
 
+    @patch("zenithmcp.ingestion.pipeline.VectorIndexer")
+    @patch("zenithmcp.ingestion.pipeline.EmbeddingGenerator")
+    @patch("zenithmcp.ingestion.pipeline.CodeChunker")
     @patch("zenithmcp.ingestion.pipeline.SourceFileDiscoverer")
     @patch("zenithmcp.ingestion.pipeline.load_and_set_config")
     def test_run_command_no_files_found(
         self,
         mock_load_config,
         mock_discoverer_class,
+        mock_chunker_class,
+        mock_embedder_class,
+        mock_indexer_class,
         sample_config,
         fs,
     ):
         """Test run command when no files are found."""
         # Setup fake filesystem
-        repo_path = "/test/repo"
+        repo_path = Path("/test/repo")
         fs.create_dir(repo_path)
 
         # Mock configuration loading
@@ -129,7 +136,7 @@ class TestPipelineOrchestration:
         mock_discoverer_class.return_value = mock_discoverer
 
         # Run command
-        result = self.runner.invoke(app, ["run", repo_path])
+        result = self.runner.invoke(app, ["run", str(repo_path)])
 
         assert result.exit_code == 0
         assert "No files to process" in result.output
@@ -153,7 +160,7 @@ class TestPipelineOrchestration:
     ):
         """Test pipeline run in dry-run mode."""
         # Setup fake filesystem
-        repo_path = "/test/repo"
+        repo_path = Path("/test/repo")
         fs.create_dir(repo_path)
 
         # Mock configuration loading
@@ -179,7 +186,7 @@ class TestPipelineOrchestration:
         mock_embedder_class.return_value = mock_embedder
 
         # Run command with dry-run flag
-        result = self.runner.invoke(app, ["run", repo_path, "--dry-run"])
+        result = self.runner.invoke(app, ["run", str(repo_path), "--dry-run"])
 
         assert result.exit_code == 0
         assert "Skipping vector indexing (dry run mode)" in result.output
@@ -210,7 +217,7 @@ class TestPipelineOrchestration:
     ):
         """Test pipeline run with force flag."""
         # Setup fake filesystem
-        repo_path = "/test/repo"
+        repo_path = Path("/test/repo")
         fs.create_dir(repo_path)
 
         # Mock configuration loading
@@ -222,13 +229,13 @@ class TestPipelineOrchestration:
         mock_discoverer_class.return_value = mock_discoverer
 
         # Run command without force flag
-        result = self.runner.invoke(app, ["run", repo_path])
+        result = self.runner.invoke(app, ["run", str(repo_path)])
 
         assert result.exit_code == 0
         assert "No files to process" in result.output
 
         # Run command with force flag - should continue processing
-        result = self.runner.invoke(app, ["run", repo_path, "--force"])
+        result = self.runner.invoke(app, ["run", str(repo_path), "--force"])
 
         # Should not exit early even with no files
         assert result.exit_code == 0
@@ -311,6 +318,8 @@ class TestPipelineOrchestration:
         assert result.exit_code == 1
         assert "Failed to load configuration" in result.output
 
+    @patch("zenithmcp.ingestion.pipeline.VectorIndexer")
+    @patch("zenithmcp.ingestion.pipeline.EmbeddingGenerator")
     @patch("zenithmcp.ingestion.pipeline.CodeChunker")
     @patch("zenithmcp.ingestion.pipeline.SourceFileDiscoverer")
     @patch("zenithmcp.ingestion.pipeline.load_and_set_config")
@@ -319,12 +328,14 @@ class TestPipelineOrchestration:
         mock_load_config,
         mock_discoverer_class,
         mock_chunker_class,
+        mock_embedder_class,
+        mock_indexer_class,
         sample_config,
         fs,
     ):
         """Test run command when chunking fails."""
         # Setup fake filesystem
-        repo_path = "/test/repo"
+        repo_path = Path("/test/repo")
         fs.create_dir(repo_path)
 
         # Mock configuration loading
@@ -341,11 +352,12 @@ class TestPipelineOrchestration:
         mock_chunker_class.return_value = mock_chunker
 
         # Run command
-        result = self.runner.invoke(app, ["run", repo_path])
+        result = self.runner.invoke(app, ["run", str(repo_path)])
 
         assert result.exit_code == 1
         assert "Code chunking failed" in result.output
 
+    @patch("zenithmcp.ingestion.pipeline.VectorIndexer")
     @patch("zenithmcp.ingestion.pipeline.EmbeddingGenerator")
     @patch("zenithmcp.ingestion.pipeline.CodeChunker")
     @patch("zenithmcp.ingestion.pipeline.SourceFileDiscoverer")
@@ -356,13 +368,14 @@ class TestPipelineOrchestration:
         mock_discoverer_class,
         mock_chunker_class,
         mock_embedder_class,
+        mock_indexer_class,
         sample_config,
         sample_code_chunks,
         fs,
     ):
         """Test run command when embedding generation fails."""
         # Setup fake filesystem
-        repo_path = "/test/repo"
+        repo_path = Path("/test/repo")
         fs.create_dir(repo_path)
 
         # Mock configuration loading
@@ -385,7 +398,7 @@ class TestPipelineOrchestration:
         mock_embedder_class.return_value = mock_embedder
 
         # Run command
-        result = self.runner.invoke(app, ["run", repo_path])
+        result = self.runner.invoke(app, ["run", str(repo_path)])
 
         assert result.exit_code == 1
         assert "Embedding generation failed" in result.output
@@ -393,7 +406,7 @@ class TestPipelineOrchestration:
     def test_run_command_with_config_file(self, temp_config_file, fs):
         """Test run command with custom config file."""
         # Setup fake filesystem
-        repo_path = "/test/repo"
+        repo_path = Path("/test/repo")
         fs.create_dir(repo_path)
 
         with patch(
@@ -402,7 +415,7 @@ class TestPipelineOrchestration:
             mock_load_config.side_effect = Exception("Config not found")
 
             self.runner.invoke(
-                app, ["run", repo_path, "--config", str(temp_config_file)]
+                app, ["run", str(repo_path), "--config", str(temp_config_file)]
             )
 
             # Should attempt to load the specified config file
@@ -411,7 +424,7 @@ class TestPipelineOrchestration:
     def test_run_command_verbose_logging(self, fs):
         """Test run command with verbose logging."""
         # Setup fake filesystem
-        repo_path = "/test/repo"
+        repo_path = Path("/test/repo")
         fs.create_dir(repo_path)
 
         with patch(
@@ -419,7 +432,7 @@ class TestPipelineOrchestration:
         ) as mock_load_config:
             mock_load_config.side_effect = Exception("Config not found")
 
-            self.runner.invoke(app, ["run", repo_path, "--verbose"])
+            self.runner.invoke(app, ["run", str(repo_path), "--verbose"])
 
             # Should enable verbose logging (DEBUG level)
             # This is tested indirectly through the setup_rich_logging call
