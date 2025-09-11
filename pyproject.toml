@@ -47,6 +47,11 @@ dependencies = [
     "uvicorn>=0.32.0",
     "rich>=13.0.0",
     "click>=8.0.0",
+    "astchunk>=0.1.0",
+    "gitpython>=3.1.45",
+    "typer>=0.17.3",
+    "pyfakefs>=5.9.3",
+    "pytest-xdist>=3.8.0",
 ]
 
 [project.optional-dependencies]
