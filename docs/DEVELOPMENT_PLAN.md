@@ -47,17 +47,17 @@ ZenithMCP is an open-source, high-performance server implementation of the Model
 **Objective**: Implement the foundational data ingestion and single-stage retrieval system
 
 #### Module: Data Ingestion Pipeline
-- [ ] Implement `src/zenithmcp/ingestion/discovery.py`
+- [x] Implement `src/zenithmcp/ingestion/discovery.py`
   - FileWatcher for local filesystem monitoring
   - GitPoller for repository change detection
-- [ ] Implement `src/zenithmcp/ingestion/chunking.py`
+- [x] Implement `src/zenithmcp/ingestion/chunking.py`
   - Tree-sitter integration via astchunk
   - AST-based code chunking for multiple languages
   - Support for Python, JavaScript, TypeScript initially
-- [ ] Implement `src/zenithmcp/ingestion/embedding.py`
+- [x] Implement `src/zenithmcp/ingestion/embedding.py`
   - GraphCodeBERT integration for code embeddings
   - Batch processing for efficiency
-- [ ] Implement `src/zenithmcp/ingestion/indexing.py`
+- [x] Implement `src/zenithmcp/ingestion/indexing.py`
   - Qdrant client setup and configuration
   - Batch upsert operations with metadata
 

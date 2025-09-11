@@ -1,0 +1,216 @@
+# ZenithMCP Configuration File
+# This file contains all operational parameters for the data ingestion pipeline
+
+# Qdrant Vector Database Configuration
+qdrant:
+  host: "localhost"
+  port: 6333
+  collection_name: "zenithmcp_code_chunks"
+  vector_size: 768  # GraphCodeBERT embedding dimension
+  distance: "Cosine"
+  timeout: 30.0
+  prefer_grpc: false
+
+# Embedding Model Configuration
+embedding:
+  model_name: "microsoft/graphcodebert-base"
+  batch_size: 32
+  max_length: 512
+  device: "auto"  # "auto", "cpu", "cuda", "mps"
+  cache_dir: ".cache/huggingface"
+
+# Code Chunking Configuration
+chunking:
+  # File extensions to process
+  file_extensions:
+    - ".py"
+    - ".js"
+    - ".ts"
+    - ".tsx"
+    - ".jsx"
+    - ".java"
+    - ".cpp"
+    - ".c"
+    - ".h"
+    - ".hpp"
+    - ".cs"
+    - ".go"
+    - ".rs"
+    - ".rb"
+    - ".php"
+    - ".swift"
+    - ".kt"
+    - ".scala"
+    - ".clj"
+    - ".hs"
+    - ".ml"
+    - ".fs"
+    - ".elm"
+    - ".dart"
+    - ".lua"
+    - ".r"
+    - ".jl"
+    - ".m"
+    - ".pl"
+    - ".sh"
+    - ".bash"
+    - ".zsh"
+    - ".fish"
+    - ".ps1"
+    - ".sql"
+    - ".yaml"
+    - ".yml"
+    - ".json"
+    - ".toml"
+    - ".ini"
+    - ".cfg"
+    - ".conf"
+    - ".xml"
+    - ".html"
+    - ".css"
+    - ".scss"
+    - ".sass"
+    - ".less"
+    - ".md"
+    - ".rst"
+    - ".txt"
+    - ".dockerfile"
+    - ".makefile"
+
+  # Patterns to exclude (glob patterns)
+  exclude_patterns:
+    - "*/node_modules/*"
+    - "*/venv/*"
+    - "*/.venv/*"
+    - "*/env/*"
+    - "*/.env/*"
+    - "*/build/*"
+    - "*/dist/*"
+    - "*/target/*"
+    - "*/.git/*"
+    - "*/.svn/*"
+    - "*/.hg/*"
+    - "*/__pycache__/*"
+    - "*/.pytest_cache/*"
+    - "*/.mypy_cache/*"
+    - "*/.ruff_cache/*"
+    - "*/coverage_html_report/*"
+    - "*/.coverage/*"
+    - "*/htmlcov/*"
+    - "*/.tox/*"
+    - "*/.nox/*"
+    - "*/vendor/*"
+    - "*/third_party/*"
+    - "*/external/*"
+    - "*/.idea/*"
+    - "*/.vscode/*"
+    - "*.lock"
+    - "*.log"
+    - "*.tmp"
+    - "*.temp"
+    - "*.bak"
+    - "*.swp"
+    - "*.swo"
+    - "*~"
+    - "*.min.js"
+    - "*.min.css"
+    - "*.bundle.js"
+    - "*.bundle.css"
+
+  # Chunking parameters
+  min_chunk_size: 50      # Minimum lines per chunk
+  max_chunk_size: 500     # Maximum lines per chunk
+  overlap_lines: 10       # Lines of overlap between chunks
+
+  # Language-specific settings
+  languages:
+    python:
+      chunk_types: ["function", "class", "method"]
+      min_lines: 5
+    javascript:
+      chunk_types: ["function", "class", "method", "arrow_function"]
+      min_lines: 5
+    typescript:
+      chunk_types: ["function", "class", "method", "interface", "type_alias"]
+      min_lines: 5
+    java:
+      chunk_types: ["method", "class", "interface"]
+      min_lines: 5
+    cpp:
+      chunk_types: ["function", "class", "struct", "namespace"]
+      min_lines: 5
+    go:
+      chunk_types: ["function", "method", "type", "interface"]
+      min_lines: 5
+    rust:
+      chunk_types: ["function", "impl", "struct", "enum", "trait"]
+      min_lines: 5
+
+# File Discovery Configuration
+discovery:
+  # State file to track last processed commit
+  state_file: ".zenithmcp_state"
+
+  # Git configuration
+  git:
+    # Whether to use Git for change detection
+    enabled: true
+    # Maximum number of commits to look back
+    max_commits: 1000
+    # Branches to monitor (empty means all branches)
+    branches: []
+
+  # File system watching (alternative to Git)
+  filesystem:
+    # Whether to use filesystem watching
+    enabled: false
+    # Polling interval in seconds
+    poll_interval: 5.0
+    # Whether to process all files on first run
+    full_scan_on_start: true
+
+# Indexing Configuration
+indexing:
+  # Batch size for Qdrant upserts
+  batch_size: 100
+  # Whether to create collection if it doesn't exist
+  create_collection: true
+  # Whether to recreate collection on schema changes
+  recreate_on_schema_change: false
+  # Parallel workers for indexing
+  parallel_workers: 4
+  # Retry configuration
+  max_retries: 3
+  retry_delay: 1.0
+
+# Logging Configuration
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: null  # Set to file path to log to file, null for console only
+  max_file_size: "10MB"
+  backup_count: 5
+
+# Performance Configuration
+performance:
+  # Maximum memory usage in MB (0 = unlimited)
+  max_memory_mb: 4096
+  # Number of CPU cores to use (0 = all available)
+  max_workers: 0
+  # Enable GPU acceleration if available
+  use_gpu: true
+  # Batch processing timeout in seconds
+  batch_timeout: 300.0
+
+# Pipeline Configuration
+pipeline:
+  # Whether to run pipeline incrementally
+  incremental: true
+  # Whether to validate embeddings after generation
+  validate_embeddings: true
+  # Whether to skip files that failed in previous runs
+  skip_failed_files: true
+  # Maximum file size to process (in MB)
+  max_file_size_mb: 10
+  # Whether to process binary files
+  process_binary_files: false
