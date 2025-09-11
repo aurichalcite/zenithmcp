@@ -110,8 +110,8 @@ class CodeChunker:
                     logger.warning(
                         f"Failed to chunk {file_path}: {result.error_message}"
                     )
-            except Exception as e:
-                logger.error(f"Unexpected error chunking {file_path}: {e}")
+            except Exception:
+                logger.exception(f"Unexpected error chunking {file_path}")
 
         logger.info(
             f"Generated {len(all_chunks)} total chunks from {len(file_paths)} files"
@@ -158,7 +158,9 @@ class CodeChunker:
                 return ChunkingResult(
                     file_path=file_path,
                     success=False,
-                    error_message=f"Unsupported file extension: {Path(file_path).suffix}",
+                    error_message=(
+                        f"Unsupported file extension: {Path(file_path).suffix}"
+                    ),
                     processing_time=time.time() - start_time,
                 )
 
@@ -199,7 +201,7 @@ class CodeChunker:
                 error_message="File not found",
                 processing_time=time.time() - start_time,
             )
-        except Exception as e:
+        except Exception:
             return ChunkingResult(
                 file_path=file_path,
                 success=False,
@@ -313,7 +315,7 @@ class CodeChunker:
                 )
 
                 # Convert to our format
-                for i, window in enumerate(code_windows):
+                for _i, window in enumerate(code_windows):
                     chunk_content = window.get("content", "")
                     metadata = window.get("metadata", {})
 
@@ -343,16 +345,17 @@ class CodeChunker:
 
                     chunks.append(chunk)
 
-            except Exception as e:
+            except Exception:
                 logger.warning(
-                    f"AST chunking failed for {file_path}: {e}. Falling back to line-based chunking."
+                    f"AST chunking failed for {file_path}: {e}. "
+                    "Falling back to line-based chunking."
                 )
                 chunks = self._create_fallback_chunks(
                     content, file_path, repository_name, commit_hash, language
                 )
 
-        except Exception as e:
-            logger.error(f"Error chunking content for {file_path}: {e}")
+        except Exception:
+            logger.exception(f"Error chunking content for {file_path}")
             # Fallback to simple line-based chunking
             chunks = self._create_fallback_chunks(
                 content, file_path, repository_name, commit_hash, language

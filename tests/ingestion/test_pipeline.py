@@ -401,7 +401,7 @@ class TestPipelineOrchestration:
         ) as mock_load_config:
             mock_load_config.side_effect = Exception("Config not found")
 
-            result = self.runner.invoke(
+            self.runner.invoke(
                 app, ["run", repo_path, "--config", str(temp_config_file)]
             )
 
@@ -419,7 +419,7 @@ class TestPipelineOrchestration:
         ) as mock_load_config:
             mock_load_config.side_effect = Exception("Config not found")
 
-            result = self.runner.invoke(app, ["run", repo_path, "--verbose"])
+            self.runner.invoke(app, ["run", repo_path, "--verbose"])
 
             # Should enable verbose logging (DEBUG level)
             # This is tested indirectly through the setup_rich_logging call

@@ -110,7 +110,8 @@ class SourceFileDiscoverer:
             return []
         else:
             logger.info(
-                f"Changes detected since {last_state.last_commit_hash[:8]}. Finding changed files."
+                f"Changes detected since {last_state.last_commit_hash[:8]}. "
+                "Finding changed files."
             )
             changed_files = self._get_changed_files_between_commits(
                 repo, last_state.last_commit_hash, current_commit

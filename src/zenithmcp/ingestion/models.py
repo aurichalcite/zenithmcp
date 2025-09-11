@@ -51,7 +51,7 @@ class CodeChunk(BaseModel):
         return values
 
     @model_validator(mode="after")
-    def validate_end_line(self):
+    def validate_end_line(self) -> "CodeChunk":
         """Validate that end_line >= start_line."""
         if self.end_line < self.start_line:
             raise ValueError("end_line must be greater than or equal to start_line")

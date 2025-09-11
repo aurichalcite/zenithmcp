@@ -209,7 +209,8 @@ def run(
                         )
                     else:
                         console.print(
-                            f"[red]Indexing failed: {indexing_result.error_message}[/red]"
+                            f"[red]Indexing failed: "
+                            f"{indexing_result.error_message}[/red]"
                         )
                         raise typer.Exit(1)
 
@@ -363,7 +364,8 @@ def info(
         f"  Exclude Patterns: {len(config.chunking.exclude_patterns)} patterns"
     )
     console.print(
-        f"  Chunk Size: {config.chunking.min_chunk_size}-{config.chunking.max_chunk_size} lines"
+        f"  Chunk Size: {config.chunking.min_chunk_size}-"
+        f"{config.chunking.max_chunk_size} lines"
     )
     console.print(f"  Overlap: {config.chunking.overlap_lines} lines")
 

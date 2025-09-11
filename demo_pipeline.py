@@ -158,7 +158,7 @@ module.exports = { Calculator, fibonacci };
     )
 
 
-def demo_file_discovery():
+def demo_file_discovery() -> None:
     """Demonstrate file discovery functionality."""
     print("🔍 Demo: File Discovery")
     print("=" * 50)
@@ -180,7 +180,7 @@ def demo_file_discovery():
         print()
 
 
-def demo_code_chunking():
+def demo_code_chunking() -> None:
     """Demonstrate code chunking functionality."""
     print("🔧 Demo: Code Chunking")
     print("=" * 50)
@@ -228,7 +228,7 @@ def demo_code_chunking():
         print()
 
 
-def demo_data_models():
+def demo_data_models() -> None:
     """Demonstrate data model functionality."""
     print("📊 Demo: Data Models")
     print("=" * 50)
@@ -263,7 +263,7 @@ def demo_data_models():
     print()
 
 
-def main():
+def main() -> None:
     """Run all demos."""
     print("🚀 ZenithMCP Data Ingestion Pipeline Demo")
     print("=" * 60)
@@ -279,7 +279,8 @@ def main():
         print("1. Set up Qdrant vector database")
         print("2. Configure GraphCodeBERT model")
         print(
-            "3. Run the full pipeline with: python -m zenithmcp.ingestion.pipeline run /path/to/repo"
+            "3. Run the full pipeline with: "
+            "python -m zenithmcp.ingestion.pipeline run /path/to/repo"
         )
 
     except Exception as e:

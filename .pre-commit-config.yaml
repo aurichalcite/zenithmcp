@@ -15,12 +15,12 @@ repos:
       - id: mixed-line-ending
         args: ['--fix=lf']
 
-#  - repo: https://github.com/astral-sh/ruff-pre-commit
-#    rev: v0.13.0
-#    hooks:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.13.0
+    hooks:
 #      - id: ruff-check
 #        args: [--fix]
-#      - id: ruff-format
+      - id: ruff-format
 
 ##  - repo: https://github.com/pre-commit/mirrors-mypy
 ##    rev: v1.17.0

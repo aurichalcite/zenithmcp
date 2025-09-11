@@ -35,7 +35,8 @@ class VectorIndexer:
     def _initialize_client(self) -> None:
         """Initialize the Qdrant client."""
         logger.info(
-            f"Initializing Qdrant client: {self.qdrant_config.host}:{self.qdrant_config.port}"
+            f"Initializing Qdrant client: "
+            f"{self.qdrant_config.host}:{self.qdrant_config.port}"
         )
 
         try:

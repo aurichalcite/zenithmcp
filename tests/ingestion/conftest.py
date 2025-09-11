@@ -240,7 +240,9 @@ def sample_code_chunks() -> list[CodeChunk]:
     # Python class chunk
     chunks.append(
         CodeChunk(
-            content="class Calculator:\n    def __init__(self):\n        self.value = 0",
+            content=(
+                "class Calculator:\n    def __init__(self):\n        self.value = 0"
+            ),
             file_path="math/calculator.py",
             repository="test_repo",
             start_line=5,

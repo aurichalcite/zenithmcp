@@ -70,14 +70,20 @@ class TestCodeChunker:
             # Mock astchunk to return some chunks
             mock_astchunk.return_value = [
                 {
-                    "content": "class Calculator:\n    def __init__(self):\n        self.history = []",
+                    "content": (
+                        "class Calculator:\n    def __init__(self):\n        "
+                        "self.history = []"
+                    ),
                     "start_line": 8,
                     "end_line": 10,
                     "symbol_name": "Calculator",
                     "symbol_type": "class",
                 },
                 {
-                    "content": "def add(self, a: float, b: float) -> float:\n        result = a + b\n        return result",
+                    "content": (
+                        "def add(self, a: float, b: float) -> float:\n        "
+                        "result = a + b\n        return result"
+                    ),
                     "start_line": 12,
                     "end_line": 15,
                     "symbol_name": "add",
@@ -313,9 +319,8 @@ class TestCodeChunker:
 
     def test_language_specific_config(self, sample_config):
         """Test using language-specific configuration."""
-        chunker = CodeChunker(sample_config)
-
         # Test that language config is accessed correctly
+        # Note: CodeChunker would be used here for actual language-specific tests
         python_config = sample_config.chunking.languages.get("python")
         assert python_config is not None
         assert python_config.chunk_types == ["function", "class"]
